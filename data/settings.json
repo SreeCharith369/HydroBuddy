@@ -1,0 +1,10 @@
+{
+  "reminder_interval": 60,
+  "snooze_interval": 10,
+  "daily_goal": 10,
+  "daily_reset_time": "02:00",
+  "start_with_windows": true,
+  "pause_during_fullscreen": true,
+  "primary_monitor_only": true,
+  "silent_mode": true
+}

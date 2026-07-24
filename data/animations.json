@@ -1,0 +1,22 @@
+{
+  "enter": {
+    "loop": false,
+    "next": "idle"
+  },
+  "idle": {
+    "loop": true,
+    "next": null
+  },
+  "drink": {
+    "loop": false,
+    "next": "exit"
+  },
+  "disappointed": {
+    "loop": false,
+    "next": "exit"
+  },
+  "exit": {
+    "loop": false,
+    "next": "waiting"
+  }
+}

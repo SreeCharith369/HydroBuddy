@@ -1,0 +1,197 @@
+
+2026-07-13 09:36:14,380 INFO hydrobuddy: Application started
+2026-07-13 09:36:15,317 INFO hydrobuddy: Reminder window shown
+2026-07-13 09:36:15,317 INFO hydrobuddy: Reminder window hidden
+2026-07-13 09:36:15,317 INFO hydrobuddy: Settings opened
+2026-07-13 09:36:15,317 INFO hydrobuddy: Settings saved
+2026-07-13 09:36:15,317 INFO hydrobuddy: Application exited
+2026-07-13 09:36:32,405 INFO hydrobuddy: Application started
+2026-07-13 09:36:32,441 WARNING hydrobuddy: System tray is not available
+2026-07-13 09:36:32,445 INFO hydrobuddy: Application exited
+2026-07-13 09:38:19,055 INFO hydrobuddy: Application started
+2026-07-13 09:38:19,095 INFO hydrobuddy: Reminder window shown
+2026-07-13 09:38:19,095 INFO hydrobuddy: Reminder window hidden
+2026-07-13 09:38:19,095 INFO hydrobuddy: Settings opened
+2026-07-13 09:38:19,095 INFO hydrobuddy: Settings saved
+2026-07-13 09:38:19,095 INFO hydrobuddy: Application exited
+2026-07-24 14:08:51,437 INFO hydrobuddy: Application started
+2026-07-24 14:08:51,631 INFO hydrobuddy: Application state initialized: idle
+2026-07-24 14:08:52,581 INFO hydrobuddy: Reminder scheduled: kind=reminder duration_ms=3600000
+2026-07-24 14:08:52,581 INFO hydrobuddy: Reminder manager started
+2026-07-24 14:08:52,581 INFO hydrobuddy: Reminder timer cancelled: reminder
+2026-07-24 14:08:52,581 INFO hydrobuddy: State transition: idle -> reminder_appearing
+2026-07-24 14:08:52,620 INFO hydrobuddy: Reminder shown
+2026-07-24 14:08:52,620 INFO hydrobuddy: Placeholder enter animation started
+2026-07-24 14:08:52,620 INFO hydrobuddy: State transition: reminder_appearing -> waiting_for_user
+2026-07-24 14:08:52,620 INFO hydrobuddy: Reminder scheduled: kind=ignore_timeout duration_ms=60000
+2026-07-24 14:08:52,970 WARNING hydrobuddy: Manual reminder ignored while state=waiting_for_user
+2026-07-24 14:08:52,971 INFO hydrobuddy: Done pressed
+2026-07-24 14:08:52,971 INFO hydrobuddy: Reminder timer cancelled: ignore_timeout
+2026-07-24 14:08:52,971 INFO hydrobuddy: State transition: waiting_for_user -> processing_done
+2026-07-24 14:08:52,971 INFO hydrobuddy: Hydration count incremented in memory: glasses=1
+2026-07-24 14:08:52,971 INFO hydrobuddy: Placeholder hydration increment triggered
+2026-07-24 14:08:52,971 INFO hydrobuddy: Placeholder drink animation started
+2026-07-24 14:08:52,971 INFO hydrobuddy: State transition: processing_done -> exiting
+2026-07-24 14:08:52,971 INFO hydrobuddy: Placeholder exit animation started
+2026-07-24 14:08:52,971 INFO hydrobuddy: Reminder hidden
+2026-07-24 14:08:52,971 INFO hydrobuddy: Reminder scheduled: kind=reminder duration_ms=3600000
+2026-07-24 14:08:52,971 INFO hydrobuddy: State transition: exiting -> idle
+2026-07-24 14:08:53,330 INFO hydrobuddy: Reminder timer cancelled: reminder
+2026-07-24 14:08:53,330 INFO hydrobuddy: State transition: idle -> reminder_appearing
+2026-07-24 14:08:53,342 INFO hydrobuddy: Reminder shown
+2026-07-24 14:08:53,342 INFO hydrobuddy: Placeholder enter animation started
+2026-07-24 14:08:53,342 INFO hydrobuddy: State transition: reminder_appearing -> waiting_for_user
+2026-07-24 14:08:53,342 INFO hydrobuddy: Reminder scheduled: kind=ignore_timeout duration_ms=60000
+2026-07-24 14:08:53,703 INFO hydrobuddy: Later pressed
+2026-07-24 14:08:53,704 INFO hydrobuddy: Reminder timer cancelled: ignore_timeout
+2026-07-24 14:08:53,704 INFO hydrobuddy: State transition: waiting_for_user -> processing_later
+2026-07-24 14:08:53,704 INFO hydrobuddy: State transition: processing_later -> exiting
+2026-07-24 14:08:53,704 INFO hydrobuddy: Placeholder exit animation started
+2026-07-24 14:08:53,704 INFO hydrobuddy: Reminder hidden
+2026-07-24 14:08:53,704 INFO hydrobuddy: Reminder scheduled: kind=snooze duration_ms=600000
+2026-07-24 14:08:53,704 INFO hydrobuddy: State transition: exiting -> idle
+2026-07-24 14:08:54,064 INFO hydrobuddy: Application exited
+2026-07-24 14:08:54,064 INFO hydrobuddy: Reminder timer cancelled: snooze
+2026-07-24 14:08:54,064 INFO hydrobuddy: Reminder scheduler cleaned up
+2026-07-24 14:08:54,064 INFO hydrobuddy: Reminder hidden
+2026-07-24 14:08:54,064 INFO hydrobuddy: Reminder manager shut down
+2026-07-24 14:09:20,053 INFO hydrobuddy: Application started
+2026-07-24 14:09:20,080 INFO hydrobuddy: Application state initialized: idle
+2026-07-24 14:09:20,125 INFO hydrobuddy: Reminder scheduled: kind=reminder duration_ms=3600000
+2026-07-24 14:09:20,125 INFO hydrobuddy: Reminder manager started
+2026-07-24 14:09:20,125 INFO hydrobuddy: Reminder timer cancelled: reminder
+2026-07-24 14:09:20,126 INFO hydrobuddy: State transition: idle -> reminder_appearing
+2026-07-24 14:09:20,162 INFO hydrobuddy: Reminder shown
+2026-07-24 14:09:20,163 INFO hydrobuddy: Placeholder enter animation started
+2026-07-24 14:09:20,163 INFO hydrobuddy: State transition: reminder_appearing -> waiting_for_user
+2026-07-24 14:09:20,163 INFO hydrobuddy: Reminder scheduled: kind=ignore_timeout duration_ms=60000
+2026-07-24 14:09:20,519 WARNING hydrobuddy: Manual reminder ignored while state=waiting_for_user
+2026-07-24 14:09:20,520 INFO hydrobuddy: Done pressed
+2026-07-24 14:09:20,520 INFO hydrobuddy: Reminder timer cancelled: ignore_timeout
+2026-07-24 14:09:20,520 INFO hydrobuddy: State transition: waiting_for_user -> processing_done
+2026-07-24 14:09:20,520 INFO hydrobuddy: Hydration count incremented in memory: glasses=1
+2026-07-24 14:09:20,520 INFO hydrobuddy: Placeholder hydration increment triggered
+2026-07-24 14:09:20,521 INFO hydrobuddy: Placeholder drink animation started
+2026-07-24 14:09:20,521 INFO hydrobuddy: State transition: processing_done -> exiting
+2026-07-24 14:09:20,521 INFO hydrobuddy: Placeholder exit animation started
+2026-07-24 14:09:20,521 INFO hydrobuddy: Reminder hidden
+2026-07-24 14:09:20,522 INFO hydrobuddy: Reminder scheduled: kind=reminder duration_ms=3600000
+2026-07-24 14:09:20,522 INFO hydrobuddy: State transition: exiting -> idle
+2026-07-24 14:09:20,882 INFO hydrobuddy: Reminder timer cancelled: reminder
+2026-07-24 14:09:20,882 INFO hydrobuddy: State transition: idle -> reminder_appearing
+2026-07-24 14:09:20,891 INFO hydrobuddy: Reminder shown
+2026-07-24 14:09:20,891 INFO hydrobuddy: Placeholder enter animation started
+2026-07-24 14:09:20,891 INFO hydrobuddy: State transition: reminder_appearing -> waiting_for_user
+2026-07-24 14:09:20,891 INFO hydrobuddy: Reminder scheduled: kind=ignore_timeout duration_ms=60000
+2026-07-24 14:09:21,263 INFO hydrobuddy: Later pressed
+2026-07-24 14:09:21,263 INFO hydrobuddy: Reminder timer cancelled: ignore_timeout
+2026-07-24 14:09:21,264 INFO hydrobuddy: State transition: waiting_for_user -> processing_later
+2026-07-24 14:09:21,264 INFO hydrobuddy: State transition: processing_later -> exiting
+2026-07-24 14:09:21,264 INFO hydrobuddy: Placeholder exit animation started
+2026-07-24 14:09:21,264 INFO hydrobuddy: Reminder hidden
+2026-07-24 14:09:21,264 INFO hydrobuddy: Reminder scheduled: kind=snooze duration_ms=600000
+2026-07-24 14:09:21,265 INFO hydrobuddy: State transition: exiting -> idle
+2026-07-24 14:09:21,624 INFO hydrobuddy: Reminder timer cancelled: snooze
+2026-07-24 14:09:21,624 INFO hydrobuddy: Reminder scheduler cleaned up
+2026-07-24 14:09:21,625 INFO hydrobuddy: Reminder hidden
+2026-07-24 14:09:21,625 INFO hydrobuddy: Reminder manager shut down
+2026-07-24 14:12:44,715 INFO hydrobuddy: Application state initialized: idle
+2026-07-24 14:12:44,719 INFO hydrobuddy: State transition: idle -> reminder_appearing
+2026-07-24 14:12:44,720 INFO hydrobuddy: Reminder shown
+2026-07-24 14:12:44,720 INFO hydrobuddy: Placeholder enter animation started
+2026-07-24 14:12:44,720 INFO hydrobuddy: State transition: reminder_appearing -> waiting_for_user
+2026-07-24 14:12:44,720 INFO hydrobuddy: Reminder scheduled: kind=ignore_timeout duration_ms=60000
+2026-07-24 14:12:44,720 INFO hydrobuddy: Ignore timeout reached
+2026-07-24 14:12:44,720 INFO hydrobuddy: State transition: waiting_for_user -> processing_ignore
+2026-07-24 14:12:44,720 INFO hydrobuddy: Placeholder disappointed animation started
+2026-07-24 14:12:44,720 INFO hydrobuddy: State transition: processing_ignore -> exiting
+2026-07-24 14:12:44,721 INFO hydrobuddy: Placeholder exit animation started
+2026-07-24 14:12:44,721 INFO hydrobuddy: Reminder hidden
+2026-07-24 14:12:44,721 INFO hydrobuddy: Reminder timer cancelled: ignore_timeout
+2026-07-24 14:12:44,721 INFO hydrobuddy: Reminder scheduled: kind=snooze duration_ms=600000
+2026-07-24 14:12:44,721 INFO hydrobuddy: State transition: exiting -> idle
+2026-07-24 14:12:44,721 INFO hydrobuddy: Reminder timer cancelled: snooze
+2026-07-24 14:12:44,721 INFO hydrobuddy: Reminder scheduler cleaned up
+2026-07-24 14:12:44,721 INFO hydrobuddy: Reminder hidden
+2026-07-24 14:12:44,721 INFO hydrobuddy: Reminder manager shut down
+2026-07-24 15:04:30,743 INFO hydrobuddy: Application started
+2026-07-24 15:04:30,765 INFO hydrobuddy: Application state initialized: idle
+2026-07-24 15:04:30,809 INFO hydrobuddy: Reminder scheduled: kind=reminder duration_ms=3600000
+2026-07-24 15:04:30,809 INFO hydrobuddy: Reminder manager started
+2026-07-24 15:05:36,869 INFO hydrobuddy: Reminder timer cancelled: reminder
+2026-07-24 15:05:36,869 INFO hydrobuddy: State transition: idle -> reminder_appearing
+2026-07-24 15:05:36,881 INFO hydrobuddy: Reminder shown
+2026-07-24 15:05:36,882 INFO hydrobuddy: Placeholder enter animation started
+2026-07-24 15:05:36,882 INFO hydrobuddy: State transition: reminder_appearing -> waiting_for_user
+2026-07-24 15:05:36,882 INFO hydrobuddy: Reminder scheduled: kind=ignore_timeout duration_ms=60000
+2026-07-24 15:05:42,763 INFO hydrobuddy: Done pressed
+2026-07-24 15:05:42,764 INFO hydrobuddy: Reminder timer cancelled: ignore_timeout
+2026-07-24 15:05:42,764 INFO hydrobuddy: State transition: waiting_for_user -> processing_done
+2026-07-24 15:05:42,764 INFO hydrobuddy: Hydration count incremented in memory: glasses=1
+2026-07-24 15:05:42,764 INFO hydrobuddy: Placeholder hydration increment triggered
+2026-07-24 15:05:42,764 INFO hydrobuddy: Placeholder drink animation started
+2026-07-24 15:05:42,764 INFO hydrobuddy: State transition: processing_done -> exiting
+2026-07-24 15:05:42,765 INFO hydrobuddy: Placeholder exit animation started
+2026-07-24 15:05:42,765 INFO hydrobuddy: Reminder hidden
+2026-07-24 15:05:42,765 INFO hydrobuddy: Reminder scheduled: kind=reminder duration_ms=3600000
+2026-07-24 15:05:42,765 INFO hydrobuddy: State transition: exiting -> idle
+2026-07-24 15:05:49,615 INFO hydrobuddy: Reminder timer cancelled: reminder
+2026-07-24 15:05:49,616 INFO hydrobuddy: State transition: idle -> reminder_appearing
+2026-07-24 15:05:49,620 INFO hydrobuddy: Reminder shown
+2026-07-24 15:05:49,620 INFO hydrobuddy: Placeholder enter animation started
+2026-07-24 15:05:49,620 INFO hydrobuddy: State transition: reminder_appearing -> waiting_for_user
+2026-07-24 15:05:49,620 INFO hydrobuddy: Reminder scheduled: kind=ignore_timeout duration_ms=60000
+2026-07-24 15:05:52,261 INFO hydrobuddy: Later pressed
+2026-07-24 15:05:52,262 INFO hydrobuddy: Reminder timer cancelled: ignore_timeout
+2026-07-24 15:05:52,262 INFO hydrobuddy: State transition: waiting_for_user -> processing_later
+2026-07-24 15:05:52,262 INFO hydrobuddy: State transition: processing_later -> exiting
+2026-07-24 15:05:52,263 INFO hydrobuddy: Placeholder exit animation started
+2026-07-24 15:05:52,263 INFO hydrobuddy: Reminder hidden
+2026-07-24 15:05:52,264 INFO hydrobuddy: Reminder scheduled: kind=snooze duration_ms=600000
+2026-07-24 15:05:52,264 INFO hydrobuddy: State transition: exiting -> idle
+2026-07-24 15:06:37,723 INFO hydrobuddy: Reminder timer cancelled: snooze
+2026-07-24 15:06:37,723 INFO hydrobuddy: State transition: idle -> reminder_appearing
+2026-07-24 15:06:37,727 INFO hydrobuddy: Reminder shown
+2026-07-24 15:06:37,728 INFO hydrobuddy: Placeholder enter animation started
+2026-07-24 15:06:37,728 INFO hydrobuddy: State transition: reminder_appearing -> waiting_for_user
+2026-07-24 15:06:37,729 INFO hydrobuddy: Reminder scheduled: kind=ignore_timeout duration_ms=60000
+2026-07-24 15:07:07,468 INFO hydrobuddy: Settings opened
+2026-07-24 15:07:32,873 INFO hydrobuddy: Settings saved
+2026-07-24 15:07:36,345 INFO hydrobuddy: Done pressed
+2026-07-24 15:07:36,345 INFO hydrobuddy: Reminder timer cancelled: ignore_timeout
+2026-07-24 15:07:36,345 INFO hydrobuddy: State transition: waiting_for_user -> processing_done
+2026-07-24 15:07:36,345 INFO hydrobuddy: Hydration count incremented in memory: glasses=2
+2026-07-24 15:07:36,345 INFO hydrobuddy: Placeholder hydration increment triggered
+2026-07-24 15:07:36,345 INFO hydrobuddy: Placeholder drink animation started
+2026-07-24 15:07:36,345 INFO hydrobuddy: State transition: processing_done -> exiting
+2026-07-24 15:07:36,345 INFO hydrobuddy: Placeholder exit animation started
+2026-07-24 15:07:36,345 INFO hydrobuddy: Reminder hidden
+2026-07-24 15:07:36,345 INFO hydrobuddy: Reminder scheduled: kind=reminder duration_ms=3600000
+2026-07-24 15:07:36,345 INFO hydrobuddy: State transition: exiting -> idle
+2026-07-24 15:07:41,930 INFO hydrobuddy: Settings opened
+2026-07-24 15:08:52,947 INFO hydrobuddy: Settings opened
+2026-07-24 15:37:19,058 INFO hydrobuddy: Application started
+2026-07-24 15:37:19,079 INFO hydrobuddy: Application state initialized: idle
+2026-07-24 15:37:19,157 INFO hydrobuddy: Reminder scheduled: kind=reminder duration_ms=3600000
+2026-07-24 15:37:19,157 INFO hydrobuddy: Reminder manager started
+2026-07-24 15:37:19,158 INFO hydrobuddy: Reminder timer cancelled: reminder
+2026-07-24 15:37:19,158 INFO hydrobuddy: State transition: idle -> reminder_appearing
+2026-07-24 15:37:19,173 INFO hydrobuddy: Reminder shown
+2026-07-24 15:37:19,173 INFO hydrobuddy: Placeholder enter animation started
+2026-07-24 15:37:19,174 INFO hydrobuddy: State transition: reminder_appearing -> waiting_for_user
+2026-07-24 15:37:19,174 INFO hydrobuddy: Reminder scheduled: kind=ignore_timeout duration_ms=60000
+2026-07-24 15:37:19,531 INFO hydrobuddy: Done pressed
+2026-07-24 15:37:19,531 INFO hydrobuddy: Reminder timer cancelled: ignore_timeout
+2026-07-24 15:37:19,531 INFO hydrobuddy: State transition: waiting_for_user -> processing_done
+2026-07-24 15:37:19,531 INFO hydrobuddy: Hydration count incremented in memory: glasses=1
+2026-07-24 15:37:19,532 INFO hydrobuddy: Placeholder hydration increment triggered
+2026-07-24 15:37:19,532 INFO hydrobuddy: Placeholder drink animation started
+2026-07-24 15:37:19,532 INFO hydrobuddy: State transition: processing_done -> exiting
+2026-07-24 15:37:19,532 INFO hydrobuddy: Placeholder exit animation started
+2026-07-24 15:37:19,533 INFO hydrobuddy: Reminder hidden
+2026-07-24 15:37:19,533 INFO hydrobuddy: Reminder scheduled: kind=reminder duration_ms=3600000
+2026-07-24 15:37:19,533 INFO hydrobuddy: State transition: exiting -> idle
+2026-07-24 15:37:19,893 INFO hydrobuddy: Reminder timer cancelled: reminder
+2026-07-24 15:37:19,893 INFO hydrobuddy: Reminder scheduler cleaned up
+2026-07-24 15:37:19,893 INFO hydrobuddy: Reminder hidden
+2026-07-24 15:37:19,894 INFO hydrobuddy: Reminder manager shut down
