@@ -1,58 +1,37 @@
 # HydroBuddy
 
-HydroBuddy is a lightweight personal Windows desktop companion that reminds the user to drink water with an animated pixel-art character.
+A Windows tray companion that reminds you to drink water. A pixel-art water drop
+pops up from behind your taskbar, asks you to drink, and celebrates when you do.
 
-The project is built in small milestones. Milestone 3 provides a runnable desktop shell with a reminder scheduler, reminder state machine, Done/Later/Ignore flows, placeholder animation events, system tray menu, settings dialog, JSON loading/saving, and logging. Character animation playback, persistent hydration history, fullscreen detection, and notification features are intentionally left for later milestones.
+Status: **rebuild, Phase 1** (core logic). See [docs/REBUILD_PLAN.md](docs/REBUILD_PLAN.md).
 
-## Tech Stack
-
-- Python 3.14
-- PySide6
-- Windows 11
-- Local JSON storage
-- MP4 animations
-- Git
-
-## How to Run
-
-Create and activate a virtual environment:
+## Setup
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+py -3.12 -m venv .venv
+.\.venv\Scripts\python -m pip install -r requirements-dev.txt
 ```
 
-Install dependencies:
+## Commands
 
 ```powershell
-pip install -r requirements.txt
+.\.venv\Scripts\python -m pytest            # run tests
+.\.venv\Scripts\python -m ruff check .      # lint
+.\.venv\Scripts\python tools\make_character.py   # regenerate character sprites + previews
+.\.venv\Scripts\python tools\demo_popup.py       # see the character on your desktop
 ```
 
-Run the placeholder entry point:
-
-```powershell
-python main.py
-```
-
-HydroBuddy starts in the system tray and schedules the next reminder. Use the tray menu to show or hide the reminder window, open settings, or exit.
-
-## Folder Structure
+## Layout
 
 ```text
-HydroBuddy/
-  assets/
-    animations/    Future MP4 files: enter, idle, drink, disappointed, exit.
-    icons/         Future Windows icon.
-    images/        Future static visual assets.
-  core/            App coordination, reminder flow, settings, storage, state, tracking.
-  data/            Local JSON defaults for settings, progress, messages, and animation metadata.
-  docs/            Supporting project notes.
-  logs/            Local application log file.
-  ui/              PySide6 shell windows, tray manager, components, theme, and animation placeholder.
-  utils/           Small shared helpers for paths, resources, logging, Windows behavior, and utilities.
-  main.py          Application entry point.
+hydrobuddy/
+  core/       clock, storage, settings, day boundary, history, scheduler (no Qt)
+  platform/   Windows integration (Phase 3)
+  ui/         tray, popup, character view (Phase 2+)
+  assets/character/   sprite strips + character.json (animation contract)
+tests/        pytest suite for core
+tools/        character generator and desktop demo
+docs/         rebuild and animation plans
 ```
 
-## Current Milestone
-
-Milestone 3 finalizes the reminder scheduler and state machine. The reminder window remains a transparent top-level overlay with opaque placeholder widgets, ready for future animated assets.
+User data is stored in `%APPDATA%\HydroBuddy` (override with `HYDROBUDDY_DATA_DIR`).

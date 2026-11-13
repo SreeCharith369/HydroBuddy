@@ -1,0 +1,45 @@
+{
+  "frame_size": [
+    48,
+    56
+  ],
+  "scale": 4,
+  "anchor": "bottom-center",
+  "states": {
+    "appear": {
+      "file": "appear.png",
+      "frames": 13,
+      "fps": 14,
+      "loop": false,
+      "next": "idle"
+    },
+    "idle": {
+      "file": "idle.png",
+      "frames": 16,
+      "fps": 8,
+      "loop": true,
+      "next": null
+    },
+    "celebrate": {
+      "file": "celebrate.png",
+      "frames": 18,
+      "fps": 12,
+      "loop": false,
+      "next": "leave"
+    },
+    "sad": {
+      "file": "sad.png",
+      "frames": 14,
+      "fps": 10,
+      "loop": false,
+      "next": "leave"
+    },
+    "leave": {
+      "file": "leave.png",
+      "frames": 10,
+      "fps": 14,
+      "loop": false,
+      "next": null
+    }
+  }
+}

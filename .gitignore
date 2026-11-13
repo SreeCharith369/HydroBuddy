@@ -1,28 +1,23 @@
 # Python
 __pycache__/
 *.py[cod]
-*.pyo
-
-# Virtual environments
 .venv/
-venv/
-env/
+.pytest_cache/
+.ruff_cache/
 
 # Build output
 build/
 dist/
 *.spec
 
-# Local data backups
-data/*.bak
-data/*.tmp
+# Generated previews (re-create with tools/make_character.py)
+preview/
 
-# IDEs and OS files
+# OS files
+desktop.ini
+Thumbs.db
+.DS_Store
+
+# Editors
 .idea/
 .vscode/
-.DS_Store
-Thumbs.db
-
-# Logs
-logs/*.log
-!logs/hydrobuddy.log
