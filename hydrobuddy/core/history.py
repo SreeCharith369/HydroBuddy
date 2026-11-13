@@ -73,6 +73,14 @@ class History:
         self._records[updated.day] = updated
         return updated
 
+    def prune(self, keep_from: date) -> int:
+        """Drop records older than ``keep_from``; return how many were removed."""
+
+        old = [day for day in self._records if day < keep_from]
+        for day in old:
+            del self._records[day]
+        return len(old)
+
     # --- persistence --------------------------------------------------------
     def to_dict(self) -> dict[str, Any]:
         return {

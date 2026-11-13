@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, fields
-from datetime import time
+from datetime import datetime, time
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +17,8 @@ LIMITS = {
     "snooze_minutes": (1, 60),
     "daily_goal": (1, 30),
 }
+TIME_FIELDS = ("day_start", "quiet_start", "quiet_end")
+BOOL_FIELDS = ("quiet_hours", "skip_when_fullscreen")
 
 
 @dataclass(frozen=True)
@@ -25,10 +27,30 @@ class Settings:
     snooze_minutes: int = 10
     daily_goal: int = 8
     day_start: str = "02:00"  # local time when a new hydration day begins
+    quiet_hours: bool = False  # no reminders between quiet_start and quiet_end
+    quiet_start: str = "23:00"
+    quiet_end: str = "08:00"
+    skip_when_fullscreen: bool = True  # wait while a fullscreen app, game or slideshow runs
 
     @property
     def day_start_time(self) -> time:
         return time.fromisoformat(self.day_start)
+
+    def in_quiet_hours(self, now: datetime) -> bool:
+        """Whether ``now`` falls in the quiet window (which may wrap past midnight)."""
+
+        if not self.quiet_hours:
+            return False
+        start, end, current = (
+            time.fromisoformat(self.quiet_start),
+            time.fromisoformat(self.quiet_end),
+            now.time(),
+        )
+        if start == end:
+            return False
+        if start < end:
+            return start <= current < end
+        return current >= start or current < end
 
     @classmethod
     def from_dict(cls, raw: dict[str, Any]) -> Settings:
@@ -41,8 +63,10 @@ class Settings:
             value = raw.get(f.name, default)
             if f.name in LIMITS:
                 values[f.name] = _int_in_range(value, default, *LIMITS[f.name])
-            elif f.name == "day_start":
+            elif f.name in TIME_FIELDS:
                 values[f.name] = _valid_time(value, default)
+            elif f.name in BOOL_FIELDS:
+                values[f.name] = value if isinstance(value, bool) else default
         return cls(**values)
 
     def to_dict(self) -> dict[str, Any]:

@@ -1,5 +1,12 @@
 # HydroBuddy Animation Plan
 
+> **Decision (2026-11-13):** the character is a smooth cartoon water drop drawn
+> live by the app as vector art (a code-drawn variant of Way 4). There are no
+> sprite files: poses and timing live in `hydrobuddy/ui/character_anim.py` and
+> the drawing in `hydrobuddy/ui/character.py`. The sprite-sheet contract in
+> section 2 is not used. The rest of this document is kept as background on
+> the options that were considered.
+
 ## 1. First, a reality check on the tools
 
 | Tool | What it can do here | What it can't |
