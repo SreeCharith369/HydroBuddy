@@ -25,9 +25,14 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python tools\build_exe.py
 ```
 
-**From source:** `.\.venv\Scripts\pythonw run.pyw`
+**From source:** double-click `run.pyw`, or run `.\.venv\Scripts\pythonw run.pyw`.
+(A double-click uses the system Python, so `run.pyw` hands over to `.venv` by itself.)
 
-HydroBuddy lives in the system tray (the water-drop icon).
+HydroBuddy opens no window. It lives in the system tray (the water-drop icon near the
+clock, possibly under the `^` overflow arrow) and shows a "HydroBuddy is running" notice
+when you start it. If it can't start, it shows an error box instead of closing silently.
+
+- `HydroBuddy.exe --quit` (or `python -m hydrobuddy --quit`) closes the running copy.
 
 - **Left-click** opens History.
 - **Right-click** opens the menu: today's count and next reminder, Log a glass,
@@ -61,7 +66,7 @@ HydroBuddy lives in the system tray (the water-drop icon).
 ## Development
 
 ```powershell
-.\.venv\Scripts\python -m pytest                    # 93 automated tests (about 5 s)
+.\.venv\Scripts\python -m pytest                    # 100 automated tests (about 5 s)
 .\.venv\Scripts\python -m ruff check .              # lint
 .\.venv\Scripts\python tools\desktop_check.py       # 10 checks on the real desktop (about 10 s)
 .\.venv\Scripts\python tools\preview_character.py   # render character previews to preview/

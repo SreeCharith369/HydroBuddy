@@ -94,3 +94,24 @@ def test_second_launch_is_refused_and_activates_the_first(qapp, isolated_data_di
             break
         QTest.qWait(20)
     assert activations == [1]
+
+
+def test_quit_message_reaches_the_running_instance(qapp, isolated_data_dir):
+    isolated_data_dir.mkdir(parents=True, exist_ok=True)
+    first = SingleInstance(isolated_data_dir)
+    assert first.acquire()
+    events = []
+    first.quit_requested.connect(lambda: events.append("quit"))
+    first.activated.connect(lambda: events.append("show"))
+
+    assert SingleInstance(isolated_data_dir).send("quit")
+    for _ in range(50):
+        if events:
+            break
+        QTest.qWait(20)
+    assert events == ["quit"]
+
+
+def test_send_reports_when_nothing_is_running(qapp, isolated_data_dir):
+    isolated_data_dir.mkdir(parents=True, exist_ok=True)
+    assert not SingleInstance(isolated_data_dir).send("show")

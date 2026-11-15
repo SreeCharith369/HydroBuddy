@@ -211,6 +211,18 @@ class AppController(QObject):
             log.info("Start with Windows: %s", start_with_windows)
         self.refresh()
 
+    def announce(self) -> None:
+        """Tell the user the app is running: a tray app opens no window of its own."""
+
+        today = self.tracker.today(self.clock.now())
+        self.tray.showMessage(
+            "HydroBuddy is running",
+            f"{today.glasses} of {today.goal} glasses today. "
+            "Find the water drop near the clock; right-click it for the menu.",
+            self.tray.icon(),
+            6000,
+        )
+
     def quit(self) -> None:
         log.info("HydroBuddy quit")
         self.timer.stop()

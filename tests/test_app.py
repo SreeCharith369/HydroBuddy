@@ -406,3 +406,13 @@ def test_quit_hides_everything(env, qapp, monkeypatch):
     assert ctrl.popup.phase is Phase.HIDDEN
     assert not ctrl.popup.isVisible()
     assert not ctrl.timer.isActive()
+
+
+def test_announce_says_the_app_is_running(env, monkeypatch):
+    ctrl = env.start()
+    ctrl.tracker.drink(env.clock.now())
+    shown = []
+    monkeypatch.setattr(ctrl.tray, "showMessage", lambda *args: shown.append(args))
+    ctrl.announce()
+    assert shown[0][0] == "HydroBuddy is running"
+    assert "1 of 8 glasses today" in shown[0][1]

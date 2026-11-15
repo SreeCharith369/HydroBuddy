@@ -15,6 +15,8 @@ from hydrobuddy.platform.single_instance import SingleInstance
 
 log = logging.getLogger("hydrobuddy")
 
+QUIT_FLAG = "--quit"
+
 
 def _log_uncaught(kind, error, trace) -> None:
     """Without a console nobody sees a traceback, so put it in the log."""
@@ -22,8 +24,17 @@ def _log_uncaught(kind, error, trace) -> None:
     log.critical("Unexpected error", exc_info=(kind, error, trace))
 
 
-def main() -> int:
-    app = QApplication(sys.argv)
+def _show_error(text: str) -> None:
+    """A plain Windows message box; works even if Qt itself is what failed."""
+
+    if sys.platform == "win32":
+        import ctypes
+
+        ctypes.windll.user32.MessageBoxW(None, text, "HydroBuddy", 0x10)  # MB_ICONERROR
+
+
+def _run(argv: list[str]) -> int:
+    app = QApplication(argv)
     app.setApplicationName("HydroBuddy")
     app.setQuitOnLastWindowClosed(False)  # closing Settings/History must not quit the tray app
 
@@ -32,6 +43,9 @@ def main() -> int:
     sys.excepthook = _log_uncaught
 
     instance = SingleInstance(folder)
+    if QUIT_FLAG in argv:  # "HydroBuddy.exe --quit" closes the running copy
+        instance.send("quit")
+        return 0
     if not instance.acquire():
         log.info("Already running; asked it to show itself")
         return 0
@@ -44,7 +58,24 @@ def main() -> int:
 
     controller = AppController(app)
     instance.activated.connect(controller.show_history)
+    instance.quit_requested.connect(controller.quit)
+    if autostart.AUTOSTART_FLAG not in argv:
+        controller.announce()  # a tray app shows no window, so say that it started
     return app.exec()
+
+
+def main() -> int:
+    """Run the app. A failure to start is logged and shown, never silent."""
+
+    try:
+        return _run(sys.argv)
+    except Exception as error:
+        log.critical("HydroBuddy could not start", exc_info=True)
+        _show_error(
+            f"HydroBuddy could not start:\n\n{type(error).__name__}: {error}\n\n"
+            "Details are in %APPDATA%\\HydroBuddy\\logs\\hydrobuddy.log"
+        )
+        return 1
 
 
 if __name__ == "__main__":

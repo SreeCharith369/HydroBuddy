@@ -9,15 +9,18 @@ RUN_KEY = r"Software\Microsoft\Windows\CurrentVersion\Run"
 VALUE_NAME = "HydroBuddy"
 
 
+AUTOSTART_FLAG = "--autostart"  # tells the app it was started by Windows, not by the user
+
+
 def launch_command() -> str:
     """The command Windows should run at sign-in."""
 
     if getattr(sys, "frozen", False):  # packaged .exe
-        return f'"{sys.executable}"'
+        return f'"{sys.executable}" {AUTOSTART_FLAG}'
     python = Path(sys.executable)
     windowless = python.with_name("pythonw.exe")  # no console window
     script = Path(__file__).resolve().parents[2] / "run.pyw"
-    return f'"{windowless if windowless.exists() else python}" "{script}"'
+    return f'"{windowless if windowless.exists() else python}" "{script}" {AUTOSTART_FLAG}'
 
 
 def registered_command(key_path: str = RUN_KEY) -> str | None:

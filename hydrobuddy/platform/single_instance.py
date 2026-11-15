@@ -1,7 +1,8 @@
 """Only one HydroBuddy runs at a time. Launching it again opens the running one.
 
-A lock file decides who is first. The first instance also listens on a local
-socket; a second launch sends it "show" and exits.
+A lock file decides who is first. The first instance also listens on two local
+sockets, one per command ("show" and "quit"). Connecting to a socket *is* the
+message, so nothing has to be read from a pipe the sender may already have closed.
 """
 
 from __future__ import annotations
@@ -15,9 +16,12 @@ from PySide6.QtNetwork import QLocalServer, QLocalSocket
 
 log = logging.getLogger(__name__)
 
+COMMANDS = ("show", "quit")
+
 
 class SingleInstance(QObject):
     activated = Signal()  # another launch asked us to show ourselves
+    quit_requested = Signal()  # another launch asked us to close
 
     def __init__(self, data_folder: Path) -> None:
         super().__init__()
@@ -26,32 +30,40 @@ class SingleInstance(QObject):
         self.name = f"HydroBuddy-{digest}"
         self._lock = QLockFile(str(data_folder / "hydrobuddy.lock"))
         self._lock.setStaleLockTime(0)  # a crashed instance's lock is detected by its PID
-        self._server: QLocalServer | None = None
+        self._servers: list[QLocalServer] = []
 
     def acquire(self) -> bool:
         """Become the running instance. Returns False if another one already is."""
 
         if not self._lock.tryLock(200):
-            self._notify_running_instance()
+            self.send("show")
             return False
-        QLocalServer.removeServer(self.name)  # clean up after a crash
-        self._server = QLocalServer(self)
-        self._server.newConnection.connect(self._on_connection)
-        if not self._server.listen(self.name):
-            log.warning("Could not listen for other launches: %s", self._server.errorString())
+        for command in COMMANDS:
+            name = f"{self.name}-{command}"
+            QLocalServer.removeServer(name)  # clean up after a crash
+            server = QLocalServer(self)
+            server.newConnection.connect(lambda s=server, c=command: self._on_connection(s, c))
+            if not server.listen(name):
+                log.warning("Could not listen for other launches: %s", server.errorString())
+            self._servers.append(server)
         return True
 
-    def _notify_running_instance(self) -> None:
-        socket = QLocalSocket()
-        socket.connectToServer(self.name)
-        if socket.waitForConnected(500):
-            socket.write(b"show")
-            socket.waitForBytesWritten(500)
-            socket.disconnectFromServer()
+    def send(self, command: str) -> bool:
+        """Send "show" or "quit" to the running instance. Returns False if none answered."""
 
-    def _on_connection(self) -> None:
-        while self._server and self._server.hasPendingConnections():
-            connection = self._server.nextPendingConnection()
+        socket = QLocalSocket()
+        socket.connectToServer(f"{self.name}-{command}")
+        if not socket.waitForConnected(500):
+            return False
+        socket.disconnectFromServer()
+        return True
+
+    def _on_connection(self, server: QLocalServer, command: str) -> None:
+        while server.hasPendingConnections():
+            connection = server.nextPendingConnection()
             connection.disconnected.connect(connection.deleteLater)
-            log.info("Another launch asked to show HydroBuddy")
-            self.activated.emit()
+            log.info("Another launch asked HydroBuddy to %s", command)
+            if command == "quit":
+                self.quit_requested.emit()
+            else:
+                self.activated.emit()
