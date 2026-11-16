@@ -60,9 +60,16 @@ def test_launch_command_points_at_windowless_launcher():
 def test_focus_checks_run_on_this_machine():
     # 0 is undocumented but returned by some Windows builds; it must not count as busy
     assert focus.notification_state() in range(0, 8)
+    # The PC may be locked or in use while the tests run, so only check they answer.
     assert isinstance(focus.is_fullscreen(), bool)
-    assert focus.screen_locked() is False  # someone is running these tests
-    assert focus.is_away() is False
+    assert isinstance(focus.screen_locked(), bool)
+    assert isinstance(focus.is_away(), bool)
+
+
+def test_windows_not_present_state_counts_as_away(monkeypatch):
+    monkeypatch.setattr(focus, "notification_state", lambda: focus.NOT_PRESENT)
+    monkeypatch.setattr(focus, "screen_locked", lambda: False)
+    assert focus.is_away()
 
 
 def test_undocumented_zero_state_is_not_treated_as_busy(monkeypatch):

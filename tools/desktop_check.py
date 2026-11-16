@@ -1,11 +1,14 @@
 """Checks that need a real Windows desktop (the automated tests run without one).
 
-What it does, in about 10 seconds:
+What it does, in about 15 seconds:
   1. Pops up a reminder and checks that its see-through parts let clicks pass to
      the window behind, while the bubble, buttons and character catch them.
-  2. Briefly shows a maximized window, then a fullscreen one, and checks that
+  2. Shows a reminder with the screen block on (the screen dims for about 2
+     seconds) and checks the dim layer catches clicks everywhere, the popup
+     stays on top of it, and the buttons are locked with a countdown.
+  3. Briefly shows a maximized window, then a fullscreen one, and checks that
      only the fullscreen one counts as "don't interrupt".
-  3. Starts the real app (with a throwaway data folder), checks the tray icon,
+  4. Starts the real app (with a throwaway data folder), checks the tray icon,
      and saves screenshots of the tray menu, popup and windows to preview/.
 
 Run:  .venv/Scripts/python tools/desktop_check.py
@@ -57,7 +60,34 @@ def check_click_through(popup: ReminderPopup) -> None:
     expect("character catches clicks", catches(BUBBLE_W - 12 + 108, popup.height() - 40))
 
 
+def check_screen_block(popup: ReminderPopup) -> None:
+    def window_at(x: int, y: int) -> int:
+        return user32.GetAncestor(user32.WindowFromPoint(wintypes.POINT(x, y)), 2)
+
+    def ours(hwnd: int) -> bool:
+        pid = wintypes.DWORD()
+        user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+        return pid.value == os.getpid()
+
+    rect = wintypes.RECT()
+    user32.GetWindowRect(int(popup.winId()), ctypes.byref(rect))
+    scale = (rect.right - rect.left) / popup.width()
+    bubble = window_at(int(rect.left + 120 * scale), int(rect.top + 70 * scale))
+    corner = window_at(60, 60)  # far from the popup: should hit the dim layer
+    middle = window_at(rect.right // 2, rect.bottom // 2)
+
+    expect("screen block is showing", popup.blocker.active)
+    expect("dim layer catches clicks in the screen corner", ours(corner) and corner != bubble)
+    expect("dim layer catches clicks in the middle", ours(middle) and middle != bubble)
+    expect("popup stays on top of the dim layer", bubble == int(popup.winId()))
+    expect("Done is locked with a countdown", popup.bubble.done_button.text().startswith("Done ("))
+    expect("Snooze is locked with a countdown", not popup.bubble.snooze_button.isEnabled())
+
+
 def main() -> int:
+    if focus.is_away():
+        print("The screen is locked, so these checks can't run. Unlock the PC and run again.")
+        return 2
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
     OUT.mkdir(exist_ok=True)
@@ -90,18 +120,24 @@ def main() -> int:
 
         QTimer.singleShot(600, capture)
 
-    popup.remind("Desktop check 💧", DayRecord(date.today(), 3, 8))
+    today = DayRecord(date.today(), 3, 8)
+    popup.remind("Desktop check 💧", today)
     steps = [
         (1800, lambda: check_click_through(popup)),
         (1900, lambda: popup.screen().grabWindow(0).save(str(OUT / "check_screen.png"))),
         (2000, popup.dismiss),
-        (2100, window.showMaximized),
-        (3000, lambda: fullscreen_state("maximized window is NOT fullscreen", False)),
-        (3100, window.showFullScreen),
-        (4000, lambda: fullscreen_state("fullscreen window IS fullscreen", True)),
-        (4100, window.close),
-        (4700, lambda: expect("nothing fullscreen after closing", not focus.is_fullscreen())),
-        (4800, start_app),
+        (2200, lambda: popup.remind("Desktop check 💧", today, 30, 7, block_screen=True)),
+        (4000, lambda: check_screen_block(popup)),
+        (4100, lambda: popup.screen().grabWindow(0).save(str(OUT / "check_blocked.png"))),
+        (4200, popup.dismiss),
+        (4300, lambda: expect("screen block is lifted afterwards", not popup.blocker.active)),
+        (4500, window.showMaximized),
+        (5400, lambda: fullscreen_state("maximized window is NOT fullscreen", False)),
+        (5500, window.showFullScreen),
+        (6400, lambda: fullscreen_state("fullscreen window IS fullscreen", True)),
+        (6500, window.close),
+        (7100, lambda: expect("nothing fullscreen after closing", not focus.is_fullscreen())),
+        (7200, start_app),
     ]
     for ms, step in steps:
         QTimer.singleShot(ms, step)

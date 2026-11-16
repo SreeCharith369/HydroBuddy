@@ -79,6 +79,7 @@ def env(qapp, isolated_data_dir, monkeypatch):
             )
             ctrl.popup.character.speed = 25.0
             ctrl.popup.ignore_seconds = 0.3
+            ctrl.popup.cooldown_scale = 0.0  # no button cooldown unless a test asks
             controllers.append(ctrl)
             return ctrl
 
@@ -416,3 +417,190 @@ def test_announce_says_the_app_is_running(env, monkeypatch):
     ctrl.announce()
     assert shown[0][0] == "HydroBuddy is running"
     assert "1 of 8 glasses today" in shown[0][1]
+
+
+# --- cooldown: Done and Snooze stay locked so there is time to actually drink ---------
+
+
+def cooling_reminder(env, scale: float = 0.02) -> AppController:
+    """A reminder on screen with real cooldowns, sped up (30 s -> 0.6 s, 7 s -> 0.14 s)."""
+
+    ctrl = env.start()
+    ctrl.popup.cooldown_scale = scale
+    env.clock.advance(minutes=60)
+    ctrl.tick()
+    wait_phase(ctrl, Phase.WAITING)
+    return ctrl
+
+
+def test_default_cooldowns_are_30_and_7_seconds():
+    assert Settings().done_cooldown_seconds == 30
+    assert Settings().snooze_cooldown_seconds == 7
+    assert Settings().block_screen is False
+
+
+def test_buttons_start_locked_and_show_a_countdown(env):
+    ctrl = cooling_reminder(env, scale=1.0)  # real time: nothing unlocks during this test
+    bubble = ctrl.popup.bubble
+    assert not bubble.done_button.isEnabled() and not bubble.snooze_button.isEnabled()
+    assert bubble.done_button.text() == "Done (30)"
+    assert bubble.snooze_button.text() == "Snooze (7)"
+
+
+def test_locked_buttons_do_nothing(env):
+    ctrl = cooling_reminder(env, scale=1.0)
+    ctrl.popup.bubble.done_button.click()
+    ctrl.popup.bubble.snooze_button.click()
+    ctrl.popup.bubble.done_clicked.emit()  # even a click that somehow gets through
+    ctrl.popup.bubble.snooze_clicked.emit()
+    assert ctrl.popup.phase is Phase.WAITING
+    assert glasses(ctrl) == 0
+    assert ctrl.tracker.scheduler.showing
+
+
+def test_snooze_unlocks_before_done_then_done_works(env):
+    ctrl = cooling_reminder(env)
+    bubble = ctrl.popup.bubble
+    wait_for(lambda: bubble.snooze_button.isEnabled())
+    assert not bubble.done_button.isEnabled()  # 7 s is up, 30 s is not
+    assert bubble.snooze_button.text() == "Snooze"
+
+    wait_for(lambda: bubble.done_button.isEnabled())
+    assert bubble.done_button.text() == "Done ✓"
+    bubble.done_button.click()
+    wait_phase(ctrl, Phase.CELEBRATING)
+    assert glasses(ctrl) == 1
+
+
+def test_snooze_works_once_its_own_cooldown_ends(env):
+    ctrl = cooling_reminder(env)
+    wait_for(lambda: ctrl.popup.bubble.snooze_button.isEnabled())
+    ctrl.popup.bubble.snooze_button.click()
+    wait_phase(ctrl, Phase.SAD)
+    assert glasses(ctrl) == 0
+
+
+def test_ignore_countdown_starts_only_after_done_unlocks(env):
+    ctrl = cooling_reminder(env)
+    assert not ctrl.popup._ignore_timer.isActive()  # still locked: can't be "ignoring" yet
+    wait_for(lambda: ctrl.popup.bubble.done_button.isEnabled())
+    assert ctrl.popup._ignore_timer.isActive()
+    wait_phase(ctrl, Phase.SAD)  # then the usual ignore timeout applies
+
+
+def test_zero_cooldown_means_buttons_work_at_once(env):
+    save_settings(Settings(done_cooldown_seconds=0, snooze_cooldown_seconds=0), env.folder)
+    ctrl = cooling_reminder(env, scale=1.0)
+    assert ctrl.popup.bubble.done_button.isEnabled()
+    assert ctrl.popup.bubble.done_button.text() == "Done ✓"
+    ctrl.popup.bubble.done_button.click()
+    wait_phase(ctrl, Phase.CELEBRATING)
+
+
+def test_next_reminder_starts_locked_again(env):
+    ctrl = cooling_reminder(env)
+    wait_for(lambda: ctrl.popup.bubble.done_button.isEnabled())
+    ctrl.popup.bubble.done_button.click()
+    wait_phase(ctrl, Phase.HIDDEN)
+    env.clock.advance(minutes=60)
+    ctrl.tick()
+    wait_phase(ctrl, Phase.WAITING)
+    assert not ctrl.popup.bubble.done_button.isEnabled()
+
+
+def test_cheer_from_the_tray_has_no_locked_buttons(env):
+    ctrl = env.start()
+    ctrl.popup.cooldown_scale = 1.0
+    ctrl.log_glass()
+    wait_phase(ctrl, Phase.CELEBRATING)
+    assert not ctrl.popup.bubble.done_button.isVisible()
+    assert not ctrl.popup.blocker.active
+
+
+# --- optional whole-screen block -----------------------------------------------------
+
+
+def blocking_reminder(env, scale: float = 0.02) -> AppController:
+    save_settings(Settings(block_screen=True), env.folder)
+    return cooling_reminder(env, scale)
+
+
+def test_screen_is_not_blocked_by_default(env):
+    ctrl = cooling_reminder(env)
+    assert not ctrl.popup.blocker.active
+
+
+def test_block_covers_every_screen_and_sits_under_the_popup(env, qapp):
+    ctrl = blocking_reminder(env, scale=1.0)
+    blocker = ctrl.popup.blocker
+    assert blocker.active
+    assert len(blocker._shades) == len(qapp.screens())
+    for shade, screen in zip(blocker._shades, qapp.screens(), strict=True):
+        assert shade.isVisible() and shade.geometry() == screen.geometry()
+    assert ctrl.popup.isVisible()
+
+
+def test_block_stays_until_answered_and_is_never_ignored(env):
+    ctrl = blocking_reminder(env)
+    wait_for(lambda: ctrl.popup.bubble.done_button.isEnabled())
+    QTest.qWait(600)  # twice the ignore timeout used in tests
+    assert ctrl.popup.phase is Phase.WAITING  # still waiting: no "ignored" while blocked
+    assert ctrl.popup.blocker.active
+
+    ctrl.popup.bubble.done_button.click()
+    assert not ctrl.popup.blocker.active  # the screen is released the moment you answer
+    wait_phase(ctrl, Phase.CELEBRATING)
+    assert glasses(ctrl) == 1
+
+
+def test_block_is_released_by_snooze(env):
+    ctrl = blocking_reminder(env)
+    wait_for(lambda: ctrl.popup.bubble.snooze_button.isEnabled())
+    assert ctrl.popup.blocker.active
+    ctrl.popup.bubble.snooze_button.click()
+    assert not ctrl.popup.blocker.active
+
+
+def test_block_cannot_be_closed_with_alt_f4(env):
+    ctrl = blocking_reminder(env, scale=1.0)
+    shade = ctrl.popup.blocker._shades[0]
+    shade.close()  # what Alt+F4 does
+    assert shade.isVisible()
+
+
+def test_block_lifts_by_itself_after_the_safety_limit(env):
+    save_settings(Settings(block_screen=True), env.folder)
+    ctrl = env.start()
+    ctrl.popup.cooldown_scale = 0.01
+    ctrl.popup.blocker.max_seconds = 0.5
+    env.clock.advance(minutes=60)
+    ctrl.tick()
+    wait_for(lambda: ctrl.popup.blocker.active)
+    wait_for(lambda: not ctrl.popup.blocker.active)
+    # it carries on as a normal reminder: still answerable, and can now time out
+    assert ctrl.popup.phase is Phase.WAITING
+    assert ctrl.popup._ignore_timer.isActive()
+
+
+def test_watchdog_lifts_the_block_if_the_popup_is_not_waiting(env):
+    ctrl = blocking_reminder(env, scale=1.0)
+    ctrl.popup.phase = Phase.HIDDEN  # simulate a bug that loses the popup
+    wait_for(lambda: not ctrl.popup.blocker.active, timeout_ms=3000)
+
+
+def test_quit_releases_the_block(env, qapp, monkeypatch):
+    monkeypatch.setattr(qapp, "quit", lambda: None)
+    ctrl = blocking_reminder(env, scale=1.0)
+    ctrl.quit()
+    assert not ctrl.popup.blocker.active
+
+
+def test_new_settings_round_trip_through_the_dialog(qapp):
+    from hydrobuddy.ui.settings_dialog import SettingsDialog
+
+    original = Settings(done_cooldown_seconds=45, snooze_cooldown_seconds=3, block_screen=True)
+    dialog = SettingsDialog(original, autostart=False)
+    assert dialog.settings() == original
+    dialog.done_cooldown.setValue(0)
+    assert dialog.done_cooldown.text() == "No wait"
+    assert dialog.settings().done_cooldown_seconds == 0

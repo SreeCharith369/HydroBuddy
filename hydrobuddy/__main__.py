@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import sys
+from pathlib import Path
 
 from PySide6.QtWidgets import QApplication
 
@@ -50,6 +51,11 @@ def _run(argv: list[str]) -> int:
         log.info("Already running; asked it to show itself")
         return 0
 
+    log.info(
+        "Launched%s: %s",
+        " by Windows sign-in" if autostart.AUTOSTART_FLAG in argv else "",
+        sys.executable if getattr(sys, "frozen", False) else Path(__file__).resolve().parent,
+    )
     try:
         if autostart.refresh():
             log.info("Start-with-Windows entry updated to %s", autostart.launch_command())

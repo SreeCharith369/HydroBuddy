@@ -157,7 +157,14 @@ class AppController(QObject):
     # --- reminders ----------------------------------------------------------------
     def show_reminder(self) -> None:
         now = self.clock.now()
-        if self.popup.remind(random.choice(REMINDERS), self.tracker.today(now)):
+        settings = self.tracker.settings
+        if self.popup.remind(
+            random.choice(REMINDERS),
+            self.tracker.today(now),
+            done_cooldown=settings.done_cooldown_seconds,
+            snooze_cooldown=settings.snooze_cooldown_seconds,
+            block_screen=settings.block_screen,
+        ):
             self.tracker.reminder_shown(now)
             log.info("Reminder shown")
 

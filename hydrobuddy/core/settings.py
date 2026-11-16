@@ -16,9 +16,11 @@ LIMITS = {
     "interval_minutes": (5, 240),
     "snooze_minutes": (1, 60),
     "daily_goal": (1, 30),
+    "done_cooldown_seconds": (0, 120),
+    "snooze_cooldown_seconds": (0, 60),
 }
 TIME_FIELDS = ("day_start", "quiet_start", "quiet_end")
-BOOL_FIELDS = ("quiet_hours", "skip_when_fullscreen")
+BOOL_FIELDS = ("quiet_hours", "skip_when_fullscreen", "block_screen")
 
 
 @dataclass(frozen=True)
@@ -31,6 +33,9 @@ class Settings:
     quiet_start: str = "23:00"
     quiet_end: str = "08:00"
     skip_when_fullscreen: bool = True  # wait while a fullscreen app, game or slideshow runs
+    done_cooldown_seconds: int = 30  # Done stays locked this long: time to actually drink
+    snooze_cooldown_seconds: int = 7  # Snooze stays locked this long
+    block_screen: bool = False  # dim the whole screen and block clicks until answered
 
     @property
     def day_start_time(self) -> time:

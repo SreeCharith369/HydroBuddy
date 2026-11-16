@@ -1,12 +1,13 @@
 # HydroBuddy Rebuild Plan
 
-> **Status (2026-11-13):** Phases 0–6 are built and tested: core logic, tray app,
+> **Status (2026-11-16):** Phases 0–6 are built and tested: core logic, tray app,
 > Windows integration (start with Windows, fullscreen/lock-screen deferral, quiet
-> hours, single instance), packaging as `dist/HydroBuddy/HydroBuddy.exe`, the
-> history view, and the character (drawn live as vector art instead of sprite
-> sheets). Not done: an installer (the .exe folder is copied by hand), Windows
-> toast notifications, sound, and multi-monitor placement (the popup always uses
-> the primary screen).
+> hours, single instance), packaging (`tools/build_exe.py`) and installing outside
+> OneDrive (`tools/install.py`), the history view, and the character (drawn live as
+> vector art instead of sprite sheets). Added since: Done/Snooze cooldowns (30 s / 7 s)
+> and an optional whole-screen block until a reminder is answered. Not done: an
+> uninstaller, sound, and multi-monitor placement (the popup always uses the primary
+> screen).
 
 Goal: a Windows tray app that reliably reminds you to drink water, makes logging a
 glass one click, and runs invisibly from boot, with an animated character added
